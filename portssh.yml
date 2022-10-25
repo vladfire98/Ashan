@@ -1,0 +1,13 @@
+
+---
+
+- name: Loops Playbook
+  hosts: ubnt
+  become: yes
+
+  tasks:
+  - name: Change port
+    shell: "sed -i 's/Port 22/Port 23/' /etc/ssh/sshd_config"
+
+  - name: Restart service SSH
+    service: name=sshd state=restarted enabled=yes

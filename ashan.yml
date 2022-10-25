@@ -1,0 +1,30 @@
+
+---
+
+- name: Loops Playbook
+  hosts: ubnt
+  become: yes
+  vars:
+    user: "newuser2"
+    password: "12345"
+    newpassword: "87654321"
+
+
+  tasks:
+  - name: Add user
+    user:
+        name: "{{ user }}"
+        password: "{{ password | password_hash('sha512') }}"
+        update_password: on_create
+
+  - name: change passwd
+    ansible.builtin.user:
+        name: "{{ user }}"
+        state: present
+        password: "{{ newpassword | password_hash('sha512') }}"
+
+  - name: Change port SSH
+    shell: "sed -i 's/Port 22/Port 23/' /etc/ssh/sshd_config"
+
+  - name: Restart service SSH
+    service: name=sshd state=restarted enabled=yes
