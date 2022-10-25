@@ -1,0 +1,60 @@
+bednyakov@vlad-proxmox:~$ cat /etc/netplan/01-network-manager-all.yaml
+# Let NetworkManager manage all devices on this system
+network:
+    ethernets:
+        ens18:
+            dhcp4: no
+        ens19:
+            dhcp4: no
+
+    bonds:
+        bond0:
+          interfaces:
+              - ens18
+              - ens19
+          dhcp4: no
+          addresses: [172.16.10.181/24]
+          gateway4: 172.16.10.1
+          nameservers:
+            addresses: [8.8.8.8]
+          parameters:
+            mode: 802.3ad
+            lacp-rate: fast
+            mii-monitor-interval: 100
+            transmit-hash-policy: layer2+3
+            ad-select: bandwidth
+          mtu: 9000
+bednyakov@vlad-proxmox:~$ ifconfig 
+bond0: flags=5187<UP,BROADCAST,RUNNING,MASTER,MULTICAST>  mtu 9000
+        inet 172.16.10.181  netmask 255.255.255.0  broadcast 172.16.10.255
+        inet6 fe80::5831:55ff:fea0:6c36  prefixlen 64  scopeid 0x20<link>
+        ether 5a:31:55:a0:6c:36  txqueuelen 1000  (Ethernet)
+        RX packets 8010  bytes 2146018 (2.1 MB)
+        RX errors 0  dropped 98  overruns 0  frame 0
+        TX packets 499  bytes 66990 (66.9 KB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+ens18: flags=6211<UP,BROADCAST,RUNNING,SLAVE,MULTICAST>  mtu 9000
+        ether 5a:31:55:a0:6c:36  txqueuelen 1000  (Ethernet)
+        RX packets 3721  bytes 754603 (754.6 KB)
+        RX errors 0  dropped 34  overruns 0  frame 0
+        TX packets 0  bytes 0 (0.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+ens19: flags=6211<UP,BROADCAST,RUNNING,SLAVE,MULTICAST>  mtu 9000
+        ether 5a:31:55:a0:6c:36  txqueuelen 1000  (Ethernet)
+        RX packets 4289  bytes 1391415 (1.3 MB)
+        RX errors 0  dropped 5  overruns 0  frame 0
+        TX packets 499  bytes 66990 (66.9 KB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+        inet 127.0.0.1  netmask 255.0.0.0
+        inet6 ::1  prefixlen 128  scopeid 0x10<host>
+        loop  txqueuelen 1000  (Локальная петля (Loopback))
+        RX packets 188  bytes 17889 (17.8 KB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 188  bytes 17889 (17.8 KB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+bednyakov@vlad-proxmox:~$ 
